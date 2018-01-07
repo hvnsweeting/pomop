@@ -16,6 +16,7 @@ def clear_screen():
 def write_finish_page(start, stop):
     import tempfile
     _, name = tempfile.mkstemp()
+    name = name + '.html'
     html = """<html><body><h1>DONE POMODORO</h1>
     <h2>Start at: {}</h2>
     <h2>End at: {}</h2>
