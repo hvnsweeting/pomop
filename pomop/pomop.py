@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import datetime
+import glob
 import os
 import subprocess as spr
 import sys
@@ -16,7 +17,17 @@ def clear_screen():
 def write_finish_page(start, stop):
     import tempfile
     _, name = tempfile.mkstemp()
-    name = name + '.html'
+    name = name + '-pomop.html'
+
+    # clean up old tmp files
+    tempdir = os.path.dirname(name)
+
+    for fn in glob.glob(os.path.join(tempdir, '*-pomop.html')):
+        print("Found {}".format(fn))
+        if fn != name:
+            print("Removing {}".format(fn))
+            os.remove(fn)
+
     html = """<html><body><h1>DONE POMODORO</h1>
     <h2>Start at: {}</h2>
     <h2>End at: {}</h2>
