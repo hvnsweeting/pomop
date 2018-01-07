@@ -26,14 +26,20 @@ Options
 -S, --nosound         Turn off sound notification
 -B, --nobrowser       Turn off browser-open notification
 
-Roadmap
--------
+Features
+--------
 
-- Support both Python2 and Python3
+- Supports both Python2 and Python3
 - No 3rd dependency
 - Run on Linux, OSX, Windows
+
+Roadmaps
+--------
+
+- Supports send notifications on OSX & Windows
 
 Authors
 -------
 
 Viet Hung Nguyen <hvn@familug.org>
+- Support both Python2 and Python3
