@@ -10,7 +10,7 @@ requisites = []
 
 setup(
     name='pomop',
-    version='0.1.1',
+    version='0.1.2',
     description='(Poor man) pomodoro technique for productivity',
     long_description=open('README.rst').read(),
     author='Viet Hung Nguyen',
