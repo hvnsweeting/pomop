@@ -86,7 +86,7 @@ def play_sound():
         if sys.platform == 'darwin':
             spr.call(["afplay", filepath])
         elif 'win' in sys.platform:
-            spr.call(["start", filepath])
+            spr.call(["start", "wmplayer", filepath])
         else:
             # Linux or other non-tested platform such as BSD*
             try:
