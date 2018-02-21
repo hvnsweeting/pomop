@@ -47,7 +47,7 @@ def _generate_sound_file(filename='noise.wav'):
         from math import sin, pi
 
         if length is None:
-            length = int(RATE/4)
+            length = int(RATE / 4)
 
         wv_data = b""
         for i in range(0, length):
@@ -62,9 +62,9 @@ def _generate_sound_file(filename='noise.wav'):
     noise_output = wave.open(filename, 'wb')
     noise_output.setparams((2, 2, 44100, 0, 'NONE', 'not compressed'))
 
-    A6 = 1760
-    B6 = 1975.53
-    C7 = 2093.00
+    A6 = 261.63 # c4
+    B6 = 293.66 # d4
+    C7 = 329.63 # e4
     wv_data = b"".join([get_note(n) for n in [A6, B6, C7]])
 
     noise_output.writeframes(wv_data)
