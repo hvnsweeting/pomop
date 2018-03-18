@@ -62,10 +62,10 @@ def _generate_sound_file(filename='noise.wav'):
     noise_output = wave.open(filename, 'wb')
     noise_output.setparams((2, 2, 44100, 0, 'NONE', 'not compressed'))
 
-    A6 = 261.63 # c4
-    B6 = 293.66 # d4
-    C7 = 329.63 # e4
-    wv_data = b"".join([get_note(n) for n in [A6, B6, C7]])
+    C4 = 261.63
+    D4 = 293.66
+    E4 = 329.63
+    wv_data = b"".join([get_note(n) for n in [C4, D4, E4]])
 
     noise_output.writeframes(wv_data)
 
@@ -163,6 +163,7 @@ def cli():
 
     start = datetime.datetime.now()
     notify_start(start, sound=sound_ntf, browser=browser_ntf)
+    print('Pomop started at {}'.format(start))
 
     for minute in range(length, 0, -1):
         print("{}: remaining {} minutes".format(APP_NAME, minute))
@@ -172,6 +173,7 @@ def cli():
     end = datetime.datetime.now()
 
     notify_end(start=start, end=end, sound=sound_ntf, browser=browser_ntf)
+    print('Pomop finished at {}'.format(end))
 
 
 if __name__ == "__main__":
