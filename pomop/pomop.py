@@ -28,7 +28,7 @@ def write_finish_page(start, stop):
             print("Removing {}".format(fn))
             os.remove(fn)
 
-    html = """<html><body><h1>DONE POMODORO</h1>
+    html = """<html><body style="background: #f4ecd8;"><h1>DONE POMODORO</h1>
     <h2>Start at: {}</h2>
     <h2>End at: {}</h2>
     </body></html>""".format(start, stop)
