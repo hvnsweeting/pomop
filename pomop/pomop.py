@@ -6,6 +6,14 @@ import os
 import subprocess as spr
 import sys
 import time
+import sqlite3
+
+
+try:
+    input = raw_input
+except NameError:
+    pass
+
 
 APP_NAME = 'PomoP: Poor man Pomodoro'
 
@@ -157,6 +165,12 @@ def cli():
                       help='Turn off browser-open notification',
                       action='store_true')
 
+    dbpath = os.path.expanduser('~/.pomop.db')
+
+    conn = sqlite3.connect(dbpath)
+    conn.execute('CREATE TABLE IF NOT EXISTS pomodoros (start DATETIME, stop DATETIME, task TEXT)')  # NOQA
+    conn.commit()
+
     args = argp.parse_args()
     length = args.length
     sound_ntf = not args.nosound
@@ -177,6 +191,11 @@ def cli():
 
     notify_end(start=start, end=end, sound=sound_ntf, browser=browser_ntf)
     print('Pomop finished at {}'.format(end))
+    done = input('What have you done in this session? ')
+
+    conn.execute('INSERT INTO pomodoros VALUES (?, ?, ?)', (start, end, done))
+    conn.commit()
+    conn.close()
 
 
 if __name__ == "__main__":
