@@ -83,7 +83,7 @@ def _generate_sound_file(filename='noise.wav'):
     noise_output.close()
 
 
-def play_sound():
+def play_sound(end=False):
     dirname = os.path.expanduser("~/.local/share/pomop")
     try:
         os.mkdir(dirname)
@@ -96,6 +96,8 @@ def play_sound():
     try:
         if sys.platform == 'darwin':
             spr.call(["afplay", filepath])
+            if end:
+                spr.call(['say', 'time up, move away from computer, now!'])
         elif 'win' in sys.platform:
             spr.call(["start", "wmplayer", filepath])
         else:
@@ -143,7 +145,7 @@ def notify_end(start, end, sound=True, browser=True):
     send_notification(end_msg)
 
     if sound:
-        play_sound()
+        play_sound(end=True)
     if browser:
         write_finish_page(start, end)
 
