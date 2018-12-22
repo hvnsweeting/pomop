@@ -168,11 +168,8 @@ def cli():
                       action='store_true')
 
     argp.add_argument('--list',
-                      type=int,
-                      nargs='?',
-                      default=10,
-                      const=10,
-                      help='Show last N pomodoros')
+                      action='store_true',
+                      help='Show last 10 pomodoros')
 
     argp.add_argument('target', nargs='?', help='Target of the pomodoro', type=str)
 
@@ -185,7 +182,7 @@ def cli():
     args = argp.parse_args()
 
     if args.list:
-        for r in conn.execute('SELECT * from pomodoros ORDER BY start DESC LIMIT ?;', (args.list,)):
+        for r in conn.execute('SELECT * from pomodoros ORDER BY start DESC LIMIT 10;'):
             print(*r)
         conn.close()
         exit(0)
