@@ -167,6 +167,8 @@ def cli():
                       help='Turn off browser-open notification',
                       action='store_true')
 
+    argp.add_argument('target', nargs='?', help='Target of the pomodoro', type=str)
+
     dbpath = os.path.expanduser('~/.pomop.db')
 
     conn = sqlite3.connect(dbpath)
@@ -185,7 +187,7 @@ def cli():
     print('Pomop started at {}'.format(start))
 
     for minute in range(length, 0, -1):
-        print("{}: remaining {} minutes".format(APP_NAME, minute))
+        print("{}: working on {} - remaining {} minutes".format(APP_NAME, args.target, minute))
         time.sleep(ONE_MINUTE_IN_SEC)
         clear_screen()
 
@@ -193,7 +195,11 @@ def cli():
 
     notify_end(start=start, end=end, sound=sound_ntf, browser=browser_ntf)
     print('Pomop finished at {}'.format(end))
-    done = input('What have you done in this session? ')
+
+    if args.target:
+        done = args.target
+    else:
+        done = input('What have you done in this session? ')
 
     conn.execute('INSERT INTO pomodoros VALUES (?, ?, ?)', (start, end, done))
     conn.commit()
