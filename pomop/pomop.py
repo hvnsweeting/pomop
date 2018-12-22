@@ -167,6 +167,13 @@ def cli():
                       help='Turn off browser-open notification',
                       action='store_true')
 
+    argp.add_argument('--list',
+                      type=int,
+                      nargs='?',
+                      default=10,
+                      const=10,
+                      help='Show last N pomodoros')
+
     argp.add_argument('target', nargs='?', help='Target of the pomodoro', type=str)
 
     dbpath = os.path.expanduser('~/.pomop.db')
@@ -176,6 +183,13 @@ def cli():
     conn.commit()
 
     args = argp.parse_args()
+
+    if args.list:
+        for r in conn.execute('SELECT * from pomodoros ORDER BY start DESC LIMIT ?;', (args.list,)):
+            print(*r)
+        conn.close()
+        exit(0)
+
     length = args.length
     sound_ntf = not args.nosound
     browser_ntf = not args.nobrowser
