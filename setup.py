@@ -10,7 +10,7 @@ requisites = []
 
 setup(
     name='pomop',
-    version='0.1.7',
+    version='0.1.8',
     description='(Poor man) pomodoro technique for productivity',
     long_description=open('README.rst').read(),
     author='Viet Hung Nguyen',
@@ -24,6 +24,7 @@ setup(
     entry_points={
         'console_scripts': [
             'pomop=pomop.pomop:cli',
+            'pmp=pomop.pomop:cli',
         ],
     },
 )
