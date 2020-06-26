@@ -189,6 +189,9 @@ def cli():
 
     ONE_MINUTE_IN_SEC = 60
 
+    sound_ntf = not args.nosound
+    browser_ntf = not args.nobrowser
+
     start = datetime.datetime.now()
     notify_start(start, sound=sound_ntf, browser=browser_ntf)
     print('Pomop started at {}'.format(start))
