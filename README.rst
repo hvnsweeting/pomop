@@ -16,7 +16,7 @@ By using pip::
 Usage
 -----
 
-Just run `pomop` for a 25 minutes pomodoro, it will notify when time-up.
+Just run `pomop 'fix bug xyz'` for a 25 minutes pomodoro, it will notify when time-up.
 
 Options
 -------

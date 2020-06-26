@@ -6,6 +6,14 @@ import os
 import subprocess as spr
 import sys
 import time
+import sqlite3
+
+
+try:
+    input = raw_input
+except NameError:
+    pass
+
 
 APP_NAME = 'PomoP: Poor man Pomodoro'
 
@@ -28,10 +36,13 @@ def write_finish_page(start, stop):
             print("Removing {}".format(fn))
             os.remove(fn)
 
-    html = """<html><body><h1>DONE POMODORO</h1>
+    html = """<html><body style="background: #696969; color:tan;"><h1>DONE POMODORO</h1>
     <h2>Start at: {}</h2>
     <h2>End at: {}</h2>
-    </body></html>""".format(start, stop)
+    </body></html>""".format(
+        start.strftime("%Y-%m-%d %H:%M:%S"),
+        stop.strftime("%Y-%m-%d %H:%M:%S")
+    )
     with open(name, 'w') as fd:
         fd.write(html)
 
@@ -47,7 +58,7 @@ def _generate_sound_file(filename='noise.wav'):
         from math import sin, pi
 
         if length is None:
-            length = int(RATE/4)
+            length = int(RATE / 4)
 
         wv_data = b""
         for i in range(0, length):
@@ -62,17 +73,17 @@ def _generate_sound_file(filename='noise.wav'):
     noise_output = wave.open(filename, 'wb')
     noise_output.setparams((2, 2, 44100, 0, 'NONE', 'not compressed'))
 
-    A6 = 1760
-    B6 = 1975.53
-    C7 = 2093.00
-    wv_data = b"".join([get_note(n) for n in [A6, B6, C7]])
+    C4 = 261.63
+    D4 = 293.66
+    E4 = 329.63
+    wv_data = b"".join([get_note(n) for n in [C4, D4, E4]])
 
     noise_output.writeframes(wv_data)
 
     noise_output.close()
 
 
-def play_sound():
+def play_sound(end=False):
     dirname = os.path.expanduser("~/.local/share/pomop")
     try:
         os.mkdir(dirname)
@@ -85,6 +96,8 @@ def play_sound():
     try:
         if sys.platform == 'darwin':
             spr.call(["afplay", filepath])
+            if end:
+                spr.call(['say', 'time up, move away from computer, now!'])
         elif 'win' in sys.platform:
             spr.call(["start", "wmplayer", filepath])
         else:
@@ -132,7 +145,7 @@ def notify_end(start, end, sound=True, browser=True):
     send_notification(end_msg)
 
     if sound:
-        play_sound()
+        play_sound(end=True)
     if browser:
         write_finish_page(start, end)
 
@@ -154,7 +167,26 @@ def cli():
                       help='Turn off browser-open notification',
                       action='store_true')
 
+    argp.add_argument('--list',
+                      action='store_true',
+                      help='Show last 10 pomodoros')
+
+    argp.add_argument('target', nargs='?', help='Target of the pomodoro', type=str)
+
+    dbpath = os.path.expanduser('~/.pomop.db')
+
+    conn = sqlite3.connect(dbpath)
+    conn.execute('CREATE TABLE IF NOT EXISTS pomodoros (start DATETIME, stop DATETIME, task TEXT)')  # NOQA
+    conn.commit()
+
     args = argp.parse_args()
+
+    if args.list:
+        for r in conn.execute('SELECT * from pomodoros ORDER BY start DESC LIMIT 10;'):
+            print(*r)
+        conn.close()
+        exit(0)
+
     length = args.length
     sound_ntf = not args.nosound
     browser_ntf = not args.nobrowser
@@ -163,15 +195,26 @@ def cli():
 
     start = datetime.datetime.now()
     notify_start(start, sound=sound_ntf, browser=browser_ntf)
+    print('Pomop started at {}'.format(start))
 
     for minute in range(length, 0, -1):
-        print("{}: remaining {} minutes".format(APP_NAME, minute))
+        print("{}: working on {} - remaining {} minutes".format(APP_NAME, args.target, minute))
         time.sleep(ONE_MINUTE_IN_SEC)
         clear_screen()
 
     end = datetime.datetime.now()
 
     notify_end(start=start, end=end, sound=sound_ntf, browser=browser_ntf)
+    print('Pomop finished at {}'.format(end))
+
+    if args.target:
+        done = args.target
+    else:
+        done = input('What have you done in this session? ')
+
+    conn.execute('INSERT INTO pomodoros VALUES (?, ?, ?)', (start, end, done))
+    conn.commit()
+    conn.close()
 
 
 if __name__ == "__main__":
