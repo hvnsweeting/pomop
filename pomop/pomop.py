@@ -158,12 +158,12 @@ def cli():
 
     argp.add_argument('-S', '--nosound',
                       help='Turn off sound notification',
-                      action='store_false',
+                      action='store_true',
                       )
 
     argp.add_argument('-B', '--nobrowser',
                       help='Turn off browser-open notification',
-                      action='store_false')
+                      action='store_true')
 
     argp.add_argument('--list',
                       action='store_true',
