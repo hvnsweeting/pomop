@@ -158,12 +158,12 @@ def cli():
 
     argp.add_argument('-S', '--nosound',
                       help='Turn off sound notification',
-                      action='store_true',
+                      action='store_false',
                       )
 
     argp.add_argument('-B', '--nobrowser',
                       help='Turn off browser-open notification',
-                      action='store_true')
+                      action='store_false')
 
     argp.add_argument('--list',
                       action='store_true',
@@ -186,8 +186,6 @@ def cli():
         exit(0)
 
     length = args.length
-    sound_ntf = not args.nosound
-    browser_ntf = not args.nobrowser
 
     ONE_MINUTE_IN_SEC = 60
 
