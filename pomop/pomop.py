@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import datetime
+import argparse
 import glob
 import os
 import subprocess as spr
@@ -8,12 +9,10 @@ import sys
 import time
 import sqlite3
 
-
 try:
     input = raw_input
 except NameError:
     pass
-
 
 APP_NAME = 'PomoP: Poor man Pomodoro'
 
@@ -151,7 +150,6 @@ def notify_end(start, end, sound=True, browser=True):
 
 
 def cli():
-    import argparse
     argp = argparse.ArgumentParser()
     argp.add_argument('-l', '--length',
                       help='Length in minutes of this pomodoro',
@@ -188,10 +186,11 @@ def cli():
         exit(0)
 
     length = args.length
-    sound_ntf = not args.nosound
-    browser_ntf = not args.nobrowser
 
     ONE_MINUTE_IN_SEC = 60
+
+    sound_ntf = not args.nosound
+    browser_ntf = not args.nobrowser
 
     start = datetime.datetime.now()
     notify_start(start, sound=sound_ntf, browser=browser_ntf)
