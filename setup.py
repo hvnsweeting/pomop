@@ -6,25 +6,16 @@ try:
 except ImportError:
     from distutils.core import setup
 
-requisites = []
-
 setup(
-    name='pomop',
-    version='0.1.8',
-    description='(Poor man) pomodoro technique for productivity',
-    long_description=open('README.rst').read(),
-    author='Viet Hung Nguyen',
-    author_email='hvn@familug.org',
-    url='https://github.com/hvnsweeting/pomop',
-    packages=['pomop'],
-    license='MIT',
-    classifiers=[
-        'Environment :: Console',
-    ],
-    entry_points={
-        'console_scripts': [
-            'pomop=pomop.pomop:cli',
-            'pmp=pomop.pomop:cli',
-        ],
-    },
+    name="pomop",
+    version="0.1.9",
+    description="(Poor man) pomodoro technique for productivity",
+    long_description=open("README.rst").read(),
+    author="Viet Hung Nguyen",
+    author_email="hvn@familug.org",
+    url="https://github.com/hvnsweeting/pomop",
+    packages=["pomop"],
+    license="MIT",
+    classifiers=["Environment :: Console"],
+    entry_points={"console_scripts": ["pomop=pomop.pomop:cli", "pmp=pomop.pomop:cli"]},
 )
