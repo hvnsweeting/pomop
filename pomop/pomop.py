@@ -167,6 +167,10 @@ def cli():
                       help='Turn off browser-open notification',
                       action='store_true')
 
+    argp.add_argument('-c', '--continuous',
+                      help='Run continuously',
+                      action='store_true')
+
     argp.add_argument('--list',
                       action='store_true',
                       help='Show last 10 pomodoros')
@@ -187,34 +191,44 @@ def cli():
         conn.close()
         exit(0)
 
-    length = args.length
-    sound_ntf = not args.nosound
-    browser_ntf = not args.nobrowser
+    def run_one_pomop():
+        length = args.length
+        sound_ntf = not args.nosound
+        browser_ntf = not args.nobrowser
 
-    ONE_MINUTE_IN_SEC = 60
+        ONE_MINUTE_IN_SEC = 60
 
-    start = datetime.datetime.now()
-    notify_start(start, sound=sound_ntf, browser=browser_ntf)
-    print('Pomop started at {}'.format(start))
+        start = datetime.datetime.now()
+        notify_start(start, sound=sound_ntf, browser=browser_ntf)
+        print('Pomop started at {}'.format(start))
 
-    for minute in range(length, 0, -1):
-        print("{}: working on {} - remaining {} minutes".format(APP_NAME, args.target, minute))
-        time.sleep(ONE_MINUTE_IN_SEC)
-        clear_screen()
+        for minute in range(length, 0, -1):
+            print("{}: working on {} - remaining {} minutes".format(APP_NAME, args.target, minute))
+            time.sleep(ONE_MINUTE_IN_SEC)
+            clear_screen()
 
-    end = datetime.datetime.now()
+        end = datetime.datetime.now()
 
-    notify_end(start=start, end=end, sound=sound_ntf, browser=browser_ntf)
-    print('Pomop finished at {}'.format(end))
+        notify_end(start=start, end=end, sound=sound_ntf, browser=browser_ntf)
+        print('Pomop finished at {}'.format(end))
 
-    if args.target:
-        done = args.target
+        if args.target:
+            done = args.target
+        else:
+            done = input('What have you done in this session? ')
+
+        conn.execute('INSERT INTO pomodoros VALUES (?, ?, ?)', (start, end, done))
+        conn.commit()
+        conn.close()
+
+    if args.continuous:
+        while True:
+            run_one_pomop()
+            BREAK_DURATION_MINS = 5
+            print("Take a break, take {} minutes break".format(BREAK_DURATION_MINS))
+            time.sleep(BREAK_DURATION_MINS * 60)
     else:
-        done = input('What have you done in this session? ')
-
-    conn.execute('INSERT INTO pomodoros VALUES (?, ?, ?)', (start, end, done))
-    conn.commit()
-    conn.close()
+        run_one_pomop()
 
 
 if __name__ == "__main__":
