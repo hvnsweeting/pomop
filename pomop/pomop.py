@@ -211,7 +211,7 @@ def cli():
         if args.continuous:
             while True:
                 run_one_pomop()
-                BREAK_DURATION_MINS = 1
+                BREAK_DURATION_MINS = 5
                 print("Take a break, take {} minutes break".format(BREAK_DURATION_MINS))
                 time.sleep(BREAK_DURATION_MINS * 60)
         else:
