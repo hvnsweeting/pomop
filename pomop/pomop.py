@@ -174,7 +174,7 @@ def cli():
 
     if args.list:
         for r in conn.execute("SELECT * from pomodoros ORDER BY start DESC LIMIT 10;"):
-            print(*r)
+            print(" ".join(r))
         conn.close()
         exit(0)
 
